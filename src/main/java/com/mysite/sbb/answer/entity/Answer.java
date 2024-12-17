@@ -1,30 +1,27 @@
-package com.mysite.sbb.question.entity;
+package com.mysite.sbb.answer.entity;
 
-import com.mysite.sbb.answer.entity.Answer;
+import com.mysite.sbb.question.entity.Question;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Setter
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Question {
+public class Answer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PRIVATE)
-    private Long id;
-
-    @Column(length = 200)
-    private String subject;
+    private Integer id;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -37,6 +34,6 @@ public class Question {
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime modifiedDate;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<Answer> answers = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Question question;
 }
