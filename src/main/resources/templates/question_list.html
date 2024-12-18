@@ -1,3 +1,4 @@
+<html xmlns:th="http://www.thymeleaf.org">
 <table>
     <thead>
         <tr>
@@ -7,8 +8,11 @@
     </thead>
     <tbody>
         <tr th:each="question : ${questions}">
-            <td th:text="${question.subject}"></td>
+            <td>
+                <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+            </td>
             <td th:text="${question.createdDate}"></td>
         </tr>
     </tbody>
 </table>
+</html>
