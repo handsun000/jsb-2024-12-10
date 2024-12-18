@@ -1,5 +1,6 @@
 package com.mysite.sbb.question.controller;
 
+import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
 import com.mysite.sbb.question.service.QuestionService;
@@ -33,6 +34,6 @@ public class QuestionController {
         Question question = questionService.findById(id);
 
         model.addAttribute("question", question);
-        return "detail";
+        return "question_detail";
     }
 }

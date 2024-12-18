@@ -26,4 +26,6 @@ public class QuestionService {
         if (op.isPresent()) return op.get();
         else throw new RuntimeException("데이터가 없습니다.");
     }
+
+
 }
