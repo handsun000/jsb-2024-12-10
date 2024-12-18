@@ -28,4 +28,11 @@ public class QuestionService {
     }
 
 
+    public Question write(String subject, String content) {
+        Question question = Question.builder()
+                .subject(subject)
+                .content(content)
+                .build();
+        return questionRepository.save(question);
+    }
 }

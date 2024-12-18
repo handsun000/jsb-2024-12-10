@@ -10,7 +10,7 @@
         </thead>
         <tbody>
         <tr th:each="question, loop : ${questions}">
-            <td th:text="${loop.count}"></td>
+            <td th:text="${questions.size() - loop.index}"></td>
             <td>
                 <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
             </td>
@@ -18,5 +18,6 @@
         </tr>
         </tbody>
     </table>
+    <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 </div>
 </html>
