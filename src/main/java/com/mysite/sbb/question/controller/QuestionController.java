@@ -1,13 +1,17 @@
 package com.mysite.sbb.question.controller;
 
 import com.mysite.sbb.answer.entity.Answer;
+import com.mysite.sbb.answer.entity.form.AnswerForm;
 import com.mysite.sbb.question.entity.Question;
+import com.mysite.sbb.question.entity.form.QuestionForm;
 import com.mysite.sbb.question.repository.QuestionRepository;
 import com.mysite.sbb.question.service.QuestionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +32,7 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable long id, Model model) {
+    public String detail(@PathVariable long id, Model model, AnswerForm answerForm) {
         Question question = questionService.findById(id);
 
         model.addAttribute("question", question);
@@ -36,13 +40,17 @@ public class QuestionController {
     }
 
     @GetMapping("/create")
-    public String questionCreate() {
-        return "question/question_form";
+    public String questionCreate(QuestionForm questionForm) {
+        return "form/question_form";
     }
 
     @PostMapping("/create")
-    public String questionCreate(String subject, String content) {
-        Question question = questionService.write(subject, content);
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "form/question_form";
+        }
+
+        questionService.write(questionForm.getSubject(), questionForm.getContent());
 
         return "redirect:/";
     }
