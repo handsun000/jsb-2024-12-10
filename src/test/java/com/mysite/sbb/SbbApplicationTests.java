@@ -142,5 +142,13 @@ class SbbApplicationTests {
 
 		assertEquals(2, answers.size());
 	}
-
+	@Test
+	void t11() {
+		for (int i = 1; i<=300; i++) {
+			questionRepository.save(Question.builder()
+					.subject("테스트 데이터입니다:[%03d]".formatted(i))
+					.content("내용무")
+					.build());
+		}
+	}
 }
