@@ -4,6 +4,8 @@ import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.answer.repository.AnswerRepository;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
+import com.mysite.sbb.user.entity.SiteUser;
+import com.mysite.sbb.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +29,9 @@ class SbbApplicationTests {
 
 	@Autowired
 	private AnswerRepository answerRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Test
 	void t1() {
@@ -150,5 +155,10 @@ class SbbApplicationTests {
 					.content("내용무")
 					.build());
 		}
+	}
+	@Test
+	void t12() {
+		Optional<SiteUser> siteUser = userRepository.findByUsername("123");
+
 	}
 }
