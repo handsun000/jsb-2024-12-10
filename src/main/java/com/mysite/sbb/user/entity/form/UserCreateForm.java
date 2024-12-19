@@ -1,4 +1,4 @@
-package com.mysite.sbb.user.form;
+package com.mysite.sbb.user.entity.form;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

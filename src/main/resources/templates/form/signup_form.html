@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="~/{/layout/layout}">
+      layout:decorate="~{/layout/layout}">
 <body>
     <div layout:fragment="content" class="container my-3">
         <div class="my-3 border-bottom">
@@ -8,8 +8,8 @@
                 <h4>회원가입</h4>
             </div>
         </div>
-        <form method="POST" th:object="${userCreateForm}">
-            <div th:replace="~{form_errors :: formErrorsFragment"></div>
+        <form th:action="@{/user/signup}" method="POST" th:object="${userCreateForm}">
+            <div th:replace="~{/form/form_errors :: formErrorsFragment}"></div>
 
             <div class="mb-3">
                 <label for="username" class="form-label">사용자ID</label>
