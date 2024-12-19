@@ -5,6 +5,7 @@ import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
 import com.mysite.sbb.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,10 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
-    public String list(Model model) {
-        List<Question> questions = questionService.getList();
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Question> paging = questionService.getList(page);
 
-        model.addAttribute("questions", questions.reversed());
+        model.addAttribute("paging", paging);
         return "question/question_list";
     }
 
