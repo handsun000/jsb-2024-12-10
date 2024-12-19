@@ -1,5 +1,5 @@
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="~{/layout/layout}">
+      layout:decorate="~{/layout/layout}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <div layout:fragment="content" class="container my-3">
     <!-- 질문 -->
     <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
@@ -33,7 +33,8 @@
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
         </div>
-        <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
+        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="10" class="form-control"></textarea>
+        <textarea sec:authorize="isAuthenticated()" disabled th:field="*{content}" rows="10" class="form-control"></textarea>
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>
 </div>
