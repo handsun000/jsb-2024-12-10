@@ -23,7 +23,7 @@ public class QuestionController {
         List<Question> questions = questionService.getList();
 
         model.addAttribute("questions", questions.reversed());
-        return "question_list";
+        return "question/question_list";
     }
 
     @GetMapping("/detail/{id}")
@@ -31,12 +31,12 @@ public class QuestionController {
         Question question = questionService.findById(id);
 
         model.addAttribute("question", question);
-        return "question_detail";
+        return "question/question_detail";
     }
 
     @GetMapping("/create")
     public String questionCreate() {
-        return "question_form";
+        return "question/question_form";
     }
 
     @PostMapping("/create")
