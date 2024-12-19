@@ -20,7 +20,8 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/**"))
                         .permitAll())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
-                .headers(header -> header.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)));
+                .headers(header -> header.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
+                .formLogin(formLogin -> formLogin.loginPage("/user/login").defaultSuccessUrl("/"));
         return http.build();
     }
 

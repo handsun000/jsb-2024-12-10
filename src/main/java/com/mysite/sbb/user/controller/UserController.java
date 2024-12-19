@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.metamodel.mapping.SqlExpressible;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,11 @@ import java.sql.SQLException;
 @RequestMapping("/user")
 public class UserController {
     private final SiteUserService siteUserService;
+
+    @GetMapping("/login")
+    public String login() {
+        return "form/login_form";
+    }
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
