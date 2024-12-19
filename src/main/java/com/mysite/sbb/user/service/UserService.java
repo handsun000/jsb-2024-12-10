@@ -27,4 +27,5 @@ public class UserService {
     public SiteUser findByUsername(String username) {
         return userRepository.findByUsername(username).get();
     }
+
 }

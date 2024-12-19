@@ -1,7 +1,12 @@
 package com.mysite.sbb.user.entity;
 
+import com.mysite.sbb.answer.entity.Answer;
+import com.mysite.sbb.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -22,5 +27,11 @@ public class SiteUser {
 
     @Column(unique = true)
     private String email;
+
+    @OneToMany
+    List<Question> questions = new ArrayList<>();
+
+    @OneToMany
+    List<Answer> answers = new ArrayList<>();
 
 }

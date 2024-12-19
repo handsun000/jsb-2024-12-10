@@ -2,6 +2,7 @@ package com.mysite.sbb.question.service;
 
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
+import com.mysite.sbb.user.entity.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -33,10 +34,11 @@ public class QuestionService {
     }
 
 
-    public Question write(String subject, String content) {
+    public Question write(String subject, String content, SiteUser author) {
         Question question = Question.builder()
                 .subject(subject)
                 .content(content)
+                .author(author)
                 .build();
         return questionRepository.save(question);
     }
