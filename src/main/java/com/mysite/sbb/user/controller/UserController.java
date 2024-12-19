@@ -1,7 +1,7 @@
 package com.mysite.sbb.user.controller;
 
 import com.mysite.sbb.user.entity.form.UserCreateForm;
-import com.mysite.sbb.user.service.SiteUserService;
+import com.mysite.sbb.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.metamodel.mapping.SqlExpressible;
@@ -19,7 +19,7 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
-    private final SiteUserService siteUserService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String login() {
@@ -43,7 +43,7 @@ public class UserController {
         }
 
         try {
-            siteUserService.create(userCreateForm.getUsername(), userCreateForm.getPassword1(), userCreateForm.getEmail());
+            userService.create(userCreateForm.getUsername(), userCreateForm.getPassword1(), userCreateForm.getEmail());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
