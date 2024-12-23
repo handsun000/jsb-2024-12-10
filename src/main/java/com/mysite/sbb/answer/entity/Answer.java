@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -40,4 +41,7 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser author;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<SiteUser> voter;
 }
