@@ -15,6 +15,7 @@ import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +61,10 @@ public class QuestionService {
 
     public void delete(Question question) {
         questionRepository.delete(question);
+    }
+
+    public void vote(Question question, SiteUser author) {
+        question.getVoter().add(author);
+        questionRepository.save(question);
     }
 }

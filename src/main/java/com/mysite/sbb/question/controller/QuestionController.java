@@ -102,4 +102,17 @@ public class QuestionController {
         questionService.delete(question);
         return "redirect:/";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String vote(@PathVariable long id, Principal principal) {
+        Question question = questionService.findById(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "추천권한이 없습니다.");
+        }
+        SiteUser siteUser = userService.findByUsername(principal.getName());
+        questionService.vote(question, siteUser);
+
+        return "redirect:/question/detail/%s".formatted(id);
+    }
 }
