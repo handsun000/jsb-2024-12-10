@@ -2,6 +2,7 @@ package com.mysite.sbb.question.controller;
 
 import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.answer.entity.form.AnswerForm;
+import com.mysite.sbb.answer.service.AnswerService;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.entity.form.QuestionForm;
 import com.mysite.sbb.question.repository.QuestionRepository;
@@ -29,6 +30,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final UserService userService;
+    private final AnswerService answerService;
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
@@ -40,10 +42,12 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable long id, Model model, AnswerForm answerForm) {
+    public String detail(@PathVariable long id, @RequestParam(value = "page", defaultValue = "0") int page, Model model, AnswerForm answerForm) {
         Question question = questionService.findById(id);
+        Page<Answer> paging = answerService.findByQuestionId(id, page);
 
         model.addAttribute("question", question);
+        model.addAttribute("paging", paging);
         return "question/question_detail";
     }
 

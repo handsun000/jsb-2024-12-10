@@ -5,10 +5,17 @@ import com.mysite.sbb.answer.repository.AnswerRepository;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.user.entity.SiteUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +52,13 @@ public class AnswerService {
 
     public void vote(Answer answer, SiteUser siteUser) {
         answer.getVoter().add(siteUser);
+        answer.setVoterCount(answer.getVoter().size());
         answerRepository.save(answer);
+    }
+
+    public Page<Answer> findByQuestionId(long id, int page) {
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, "voterCount"));
+
+        return answerRepository.findByQuestionId(id, pageable);
     }
 }

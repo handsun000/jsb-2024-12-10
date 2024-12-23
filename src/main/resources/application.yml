@@ -19,6 +19,10 @@ spring:
         format_sql: true
         highlight_sql: true
         use_sql_comments: true
+        query:
+          in_clause_parameter_padding: true
+        jdbc:
+          batch_size: 10
 logging:
   level:
     org.hibernate.SQL: DEBUG

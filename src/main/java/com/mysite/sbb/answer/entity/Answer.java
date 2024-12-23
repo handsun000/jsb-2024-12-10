@@ -3,6 +3,7 @@ package com.mysite.sbb.answer.entity;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.user.entity.SiteUser;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -42,6 +43,11 @@ public class Answer {
     @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser author;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     private Set<SiteUser> voter;
+
+    @Column
+    @NotNull
+    private int voterCount;
+
 }
