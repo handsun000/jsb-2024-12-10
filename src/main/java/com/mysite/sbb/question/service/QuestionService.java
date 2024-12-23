@@ -79,8 +79,8 @@ public class QuestionService {
         sorts.add(Sort.Order.desc("createdDate"));
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        Specification<Question> spec = search(kw);
-        return questionRepository.findAll(spec, pageable);
+        //Specification<Question> spec = search(kw);
+        return questionRepository.findAllByKeyword(kw, pageable);
     }
 
     public void modify(Question question, String subject, String content) {
