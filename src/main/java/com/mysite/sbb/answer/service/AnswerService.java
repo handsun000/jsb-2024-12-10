@@ -57,7 +57,10 @@ public class AnswerService {
     }
 
     public Page<Answer> findByQuestionId(long id, int page) {
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, "voterCount"));
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("voterCount"));
+        sorts.add(Sort.Order.desc("modifiedDate"));
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
 
         return answerRepository.findByQuestionId(id, pageable);
     }
