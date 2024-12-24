@@ -30,6 +30,21 @@
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
                    th:text="삭제"></a>
             </div>
+            <div class="card my-3">
+                <div class="card-body">
+                    <div class="card-text" th:utext="${@commonUtil.markdown(question.content)}"></div>
+                </div>
+            </div>
+            <form th:action="@{|/comment/create/${question.id}|}" method="post" th:object="${commentForm}">
+                <div th:replace="~{/form/form_errors :: formErrorsFragment}"></div>
+                <div style="display:flex; justify-content:space-between;gap:10px">
+                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
+                              class="form-control"></textarea>
+                    <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="1"
+                              class="form-control"></textarea>
+                    <input type="submit" value="댓글등록" class="btn btn-primary my-2">
+                </div>
+            </form>
         </div>
     </div>
     <!-- 답변의 갯수 표시 -->
@@ -93,10 +108,9 @@
     <!-- 페이징처리 끝 -->
     <!-- 답변 작성 -->
     <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
-        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
-        </div>
-        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="10" class="form-control"></textarea>
+        <div th:replace="~{/form/form_errors :: formErrorsFragment}"></div>
+        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="10"
+                  class="form-control"></textarea>
         <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="10" class="form-control"></textarea>
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>

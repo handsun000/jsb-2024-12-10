@@ -1,6 +1,7 @@
 package com.mysite.sbb.user.entity;
 
 import com.mysite.sbb.answer.entity.Answer;
+import com.mysite.sbb.comment.entity.Comment;
 import com.mysite.sbb.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,10 +29,12 @@ public class SiteUser {
     @Column(unique = true)
     private String email;
 
-    @OneToMany
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     List<Question> questions = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     List<Answer> answers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    List<Comment> comments = new ArrayList<>();
 }

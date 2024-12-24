@@ -3,6 +3,7 @@ package com.mysite.sbb.question.controller;
 import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.answer.entity.form.AnswerForm;
 import com.mysite.sbb.answer.service.AnswerService;
+import com.mysite.sbb.comment.entity.form.CommentForm;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.entity.form.QuestionForm;
 import com.mysite.sbb.question.repository.QuestionRepository;
@@ -42,7 +43,7 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable long id, @RequestParam(value = "page", defaultValue = "0") int page, Model model, AnswerForm answerForm) {
+    public String detail(@PathVariable long id, @RequestParam(value = "page", defaultValue = "0") int page, Model model, AnswerForm answerForm, CommentForm commentForm) {
         Question question = questionService.findById(id);
         Page<Answer> paging = answerService.findByQuestionId(id, page);
 

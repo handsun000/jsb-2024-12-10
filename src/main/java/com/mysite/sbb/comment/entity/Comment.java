@@ -1,10 +1,9 @@
-package com.mysite.sbb.answer.entity;
+package com.mysite.sbb.comment.entity;
 
-import com.mysite.sbb.comment.entity.Comment;
+import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.user.entity.SiteUser;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -12,21 +11,20 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Answer {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PRIVATE)
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -39,20 +37,12 @@ public class Answer {
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime modifiedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    private Answer answer;
+
+    @ManyToOne
     private Question question;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private SiteUser author;
-
-    @ManyToMany
-    private Set<SiteUser> voter;
-
-    @Column
-    @NotNull
-    private int voterCount;
-
-    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
-    private List<Comment> comments;
-
 }

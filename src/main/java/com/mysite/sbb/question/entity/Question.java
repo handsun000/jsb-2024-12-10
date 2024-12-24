@@ -1,6 +1,7 @@
 package com.mysite.sbb.question.entity;
 
 import com.mysite.sbb.answer.entity.Answer;
+import com.mysite.sbb.comment.entity.Comment;
 import com.mysite.sbb.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,4 +49,7 @@ public class Question {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<SiteUser> voter;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 }
