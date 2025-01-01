@@ -3,6 +3,7 @@ package com.mysite.sbb.question.controller;
 import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.answer.entity.form.AnswerForm;
 import com.mysite.sbb.answer.service.AnswerService;
+import com.mysite.sbb.comment.entity.Comment;
 import com.mysite.sbb.comment.entity.form.CommentForm;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.entity.form.QuestionForm;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -47,8 +49,24 @@ public class QuestionController {
         Question question = questionService.findById(id);
         Page<Answer> paging = answerService.findByQuestionId(id, page);
 
+        List<Comment> questionComment = new ArrayList<>();
+        List<Comment> answerComment = new ArrayList<>();
+
+        List<Comment> comments = question.getComments();
+        if (comments != null && !comments.isEmpty()) {
+            for (Comment comment : comments) {
+                if (comment.getQuestion() != null) {
+                    questionComment.add(comment);
+                } else {
+                    answerComment.add(comment);
+                }
+            }
+        }
+
         model.addAttribute("question", question);
         model.addAttribute("paging", paging);
+        model.addAttribute("questionComment", questionComment);
+        model.addAttribute("answerComment", answerComment);
         return "question/question_detail";
     }
 

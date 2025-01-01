@@ -30,16 +30,14 @@
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
                    th:text="삭제"></a>
             </div>
-            <div class="card my-3">
-                <div class="card-body">
-                    <div class="card-text" th:utext="${@commonUtil.markdown(question.content)}"></div>
-                </div>
+            <div th:each="comment : ${questionComment}">
+                <div th:replace="~{/comment/comment_list :: commentList}"></div>
             </div>
             <form th:action="@{|/comment/create/${question.id}|}" method="post" th:object="${commentForm}">
                 <div th:replace="~{/form/form_errors :: formErrorsFragment}"></div>
                 <div style="display:flex; justify-content:space-between;gap:10px">
-                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
-                              class="form-control"></textarea>
+                        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
+                                  class="form-control"></textarea>
                     <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="1"
                               class="form-control"></textarea>
                     <input type="submit" value="댓글등록" class="btn btn-primary my-2">
@@ -82,6 +80,19 @@
                    th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
                    th:text="삭제"></a>
             </div>
+            <div th:each="comment : ${answerComment}">
+                <div th:replace="~{/comment/comment_list :: commentList}"></div>
+            </div>
+            <form th:action="@{|/comment/create/${question.id}|}" method="post" th:object="${commentForm}">
+                <div th:replace="~{/form/form_errors :: formErrorsFragment}"></div>
+                <div style="display:flex; justify-content:space-between;gap:10px">
+                        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
+                                  class="form-control"></textarea>
+                    <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="1"
+                              class="form-control"></textarea>
+                    <input type="submit" value="댓글등록" class="btn btn-primary my-2">
+                </div>
+            </form>
         </div>
     </div>
     <!-- 답변 반복 끝  -->
