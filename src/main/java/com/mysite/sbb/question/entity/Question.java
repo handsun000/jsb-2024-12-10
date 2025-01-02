@@ -1,6 +1,7 @@
 package com.mysite.sbb.question.entity;
 
 import com.mysite.sbb.answer.entity.Answer;
+import com.mysite.sbb.category.entity.Category;
 import com.mysite.sbb.comment.entity.Comment;
 import com.mysite.sbb.user.entity.SiteUser;
 import jakarta.persistence.*;
@@ -52,4 +53,7 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
 }
