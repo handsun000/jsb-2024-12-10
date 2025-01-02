@@ -3,6 +3,8 @@ package com.mysite.sbb.question.controller;
 import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.answer.entity.form.AnswerForm;
 import com.mysite.sbb.answer.service.AnswerService;
+import com.mysite.sbb.category.entity.Category;
+import com.mysite.sbb.category.service.CategoryService;
 import com.mysite.sbb.comment.entity.Comment;
 import com.mysite.sbb.comment.entity.form.CommentForm;
 import com.mysite.sbb.question.entity.Question;
@@ -34,6 +36,7 @@ public class QuestionController {
     private final QuestionService questionService;
     private final UserService userService;
     private final AnswerService answerService;
+    private final CategoryService categoryService;
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
@@ -72,7 +75,10 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String questionCreate(QuestionForm questionForm) {
+    public String questionCreate(QuestionForm questionForm, Model model) {
+        List<Category> categories = categoryService.findAll();
+
+        model.addAttribute("categories", categories);
         return "form/question_form";
     }
 
@@ -83,7 +89,7 @@ public class QuestionController {
             return "form/question_form";
         }
         SiteUser siteUser = userService.findByUsername(principal.getName());
-        questionService.write(questionForm.getSubject(), questionForm.getContent(), siteUser);
+        questionService.write(questionForm.getSubject(), questionForm.getContent(), questionForm.getCategory(), siteUser);
 
         return "redirect:/";
     }

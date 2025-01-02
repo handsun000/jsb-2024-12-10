@@ -1,31 +1,31 @@
 package com.mysite.sbb.question.service;
 
 import com.mysite.sbb.answer.entity.Answer;
+import com.mysite.sbb.category.entity.Category;
+import com.mysite.sbb.category.repository.CategoryRepository;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
 import com.mysite.sbb.user.entity.SiteUser;
 import jakarta.persistence.criteria.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.expression.spel.ast.SpelNodeImpl;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final CategoryRepository categoryRepository;
 
     private Specification<Question> search(String kw) {
         return new Specification<Question>() {
@@ -57,11 +57,14 @@ public class QuestionService {
         else throw new RuntimeException("데이터가 없습니다.");
     }
 
-    public Question write(String subject, String content, SiteUser author) {
+    public Question write(String subject, String content, String categoryId, SiteUser author) {
+        Category category = categoryRepository.findById(Long.parseLong(categoryId)).get();
+
         Question question = Question.builder()
                 .subject(subject)
                 .content(content)
                 .author(author)
+                .category(category)
                 .build();
         return questionRepository.save(question);
     }

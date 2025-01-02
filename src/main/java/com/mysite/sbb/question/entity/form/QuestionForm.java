@@ -14,4 +14,7 @@ public class QuestionForm {
 
     @NotEmpty(message = "내용은 필수항목입니다.")
     private String content;
+
+    @NotEmpty(message = "카테고리를 선택해주세요.")
+    private String category;
 }
