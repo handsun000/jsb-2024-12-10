@@ -56,4 +56,9 @@ public class UserController {
 
         return "redirect:/";
     }
+
+    @GetMapping("/profile")
+    public String profile() {
+        return "user/user_profile";
+    }
 }
