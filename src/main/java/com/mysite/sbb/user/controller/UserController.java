@@ -1,8 +1,12 @@
 package com.mysite.sbb.user.controller;
 
+import com.mysite.sbb.email.service.EmailService;
 import com.mysite.sbb.user.entity.SiteUser;
+import com.mysite.sbb.user.entity.form.UserChangePasswordForm;
 import com.mysite.sbb.user.entity.form.UserCreateForm;
+import com.mysite.sbb.user.entity.form.UserFindForm;
 import com.mysite.sbb.user.service.UserService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.metamodel.mapping.SqlExpressible;
@@ -12,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.sql.SQLException;
@@ -23,6 +29,7 @@ import java.sql.SQLException;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final EmailService emailService;
 
     @GetMapping("/login")
     public String login() {
@@ -67,5 +74,60 @@ public class UserController {
         model.addAttribute("siteUser", siteUser);
 
         return "user/user_profile";
+    }
+
+    @GetMapping("/findPassword")
+    public String findPassword(UserFindForm userFindForm) {
+        return "form/findPassword_form";
+    }
+
+    @PostMapping("/sendTemporaryPassword")
+    @Transactional
+    public String sendTemporaryPassword(@Valid UserFindForm userFindForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "form/findPassword_form";
+        }
+
+        SiteUser siteUser = userService.findByUsername(userFindForm.getUsername());
+        if (!siteUser.getEmail().equals(userFindForm.getEmail())) {
+            bindingResult.rejectValue("email", "emailFail", "이메일이 맞지 않습니다.");
+            return "form/findPassword_form";
+        }
+        String temporaryPassword = "123123";
+        String subject = "임시 비밀번호 안내";
+        String body = "안녕하세요, \n\n" +
+                "요청하신 임시 비밀번호는 다음과 같습니다:\n" +
+                temporaryPassword + "\n\n" +
+                "감사합니다.";
+
+        //emailService.sendEmail(userFindForm.getEmail(), subject, body);
+        siteUser.setPassword(temporaryPassword);
+        redirectAttributes.addFlashAttribute("username", siteUser.getUsername());
+        return "redirect:/user/changePassword";
+    }
+
+    @GetMapping("/changePassword")
+    public String changePassword(UserChangePasswordForm userChangePasswordForm, @ModelAttribute("username") String username) {
+        userChangePasswordForm.setUsername(username);
+        return "form/changePassword_form";
+    }
+
+    @PostMapping("/changePassword")
+    @Transactional
+    public String changePassword(@Valid UserChangePasswordForm userChangePasswordForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "form/changePassword_form";
+        }
+        SiteUser siteUser = userService.findByUsername(userChangePasswordForm.getUsername());
+        if (!userChangePasswordForm.getPassword1().equals(siteUser.getPassword())) {
+            bindingResult.rejectValue("password1", "password1Fail", "현재 비밀번호가 일치하지 않습니다.");
+            return "form/changePassword_form";
+        }
+        if (!userChangePasswordForm.getPassword2().equals(userChangePasswordForm.getPassword3())) {
+            bindingResult.rejectValue("password3", "password3Fail", "2개의 패스워드가 일치하지 않습니다.");
+            return "form/changePassword_form";
+        }
+        siteUser.setPassword(userChangePasswordForm.getPassword2());
+        return "redirect:/";
     }
 }
