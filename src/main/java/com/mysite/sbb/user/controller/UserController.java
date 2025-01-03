@@ -1,5 +1,6 @@
 package com.mysite.sbb.user.controller;
 
+import com.mysite.sbb.user.entity.SiteUser;
 import com.mysite.sbb.user.entity.form.UserCreateForm;
 import com.mysite.sbb.user.service.UserService;
 import jakarta.validation.Valid;
@@ -8,11 +9,13 @@ import org.hibernate.metamodel.mapping.SqlExpressible;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.sql.SQLException;
 
 @Controller
@@ -58,7 +61,11 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String profile() {
+    public String profile(Model model, Principal principal) {
+        SiteUser siteUser = userService.findByUsername(principal.getName());
+
+        model.addAttribute("siteUser", siteUser);
+
         return "user/user_profile";
     }
 }
