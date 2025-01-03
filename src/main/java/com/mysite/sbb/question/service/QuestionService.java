@@ -77,13 +77,21 @@ public class QuestionService {
         return questionRepository.findAll(pageable);
     }
 
-    public Page<Question> getList(int page, String kw) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdDate"));
+    public Page<Question> getList(int page, String kw, String filter) {
 
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc(getSort(filter))));
         //Specification<Question> spec = search(kw);
         return questionRepository.findAllByKeyword(kw, pageable);
+    }
+
+    private String getSort(String filter) {
+        if ("answer".equals(filter)) {
+            return "a.modifiedDate";
+        } else if ("comment".equals(filter)) {
+            return "c.modifiedDate";
+        }
+
+        return "createdDate";
     }
 
     public void modify(Question question, String subject, String content) {

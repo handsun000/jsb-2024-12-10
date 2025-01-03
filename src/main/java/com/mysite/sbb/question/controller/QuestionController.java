@@ -39,9 +39,10 @@ public class QuestionController {
     private final CategoryService categoryService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Question> paging = questionService.getList(page, kw);
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw, @RequestParam(value = "filter", defaultValue = "") String filter) {
+        Page<Question> paging = questionService.getList(page, kw, filter);
 
+        model.addAttribute("filter", filter);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
         return "question/question_list";

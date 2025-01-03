@@ -19,7 +19,17 @@
             <th style="width:30%">제목</th>
             <th>글쓴이</th>
             <th>카테고리</th>
-            <th>작성일시</th>
+            <th>
+                <form action="/question/list" method="get" id="filterForm">
+                    <label for="filter">
+                        <select id="filter" name="filter" onchange="this.form.submit()">
+                            <option value="date" th:selected="${filter == '' || filter == 'date'}">작성일자</option>
+                            <option value="answer" th:selected="${filter == 'answer'}">최근답변</option>
+                            <option value="comment" th:selected="${filter == 'comment'}">최근댓글</option>
+                        </select>
+                    </label>
+                </form>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -77,5 +87,10 @@
         document.getElementById('page').value = 0;
         document.getElementById('searchForm').submit();
     });
+
+    function filter() {
+        console.log("여기");
+        document.filterForm.submit();
+    }
 </script>
 </html>
