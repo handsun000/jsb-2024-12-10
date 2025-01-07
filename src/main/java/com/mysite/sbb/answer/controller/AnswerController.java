@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,7 +37,7 @@ public class AnswerController {
     @PostMapping("/create/{id}")
     public String createAnswer(@RequestParam(value = "page", defaultValue = "0") int page, @PathVariable long id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal, Model model, CommentForm commentForm) {
         Question question = questionService.findById(id);
-        SiteUser siteUser = userService.findByUsername(principal.getName());
+        SiteUser siteUser = userService.findByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         Page<Answer> paging = answerService.findByQuestionId(id, page);
 
         if (bindingResult.hasErrors()) {
@@ -90,7 +91,7 @@ public class AnswerController {
     @GetMapping("/vote/{id}")
     public String vote(@PathVariable long id, Principal principal) {
         Answer answer = answerService.findById(id);
-        SiteUser siteUser = userService.findByUsername(principal.getName());
+        SiteUser siteUser = userService.findByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         answerService.vote(answer, siteUser);
 
         return "redirect:/question/detail/%s#answer_%s".formatted(answer.getQuestion().getId(), answer.getId());

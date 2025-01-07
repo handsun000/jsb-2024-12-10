@@ -2,6 +2,7 @@
       layout:decorate="~{/layout/layout}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <div layout:fragment="content" class="container my-3">
     <!-- 질문 -->
+    <p>Principal Class: <span th:text="${#authentication.getPrincipal().getClass().getName()}"></span></p>
     <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
     <div class="card my-3">
         <div class="card-body">

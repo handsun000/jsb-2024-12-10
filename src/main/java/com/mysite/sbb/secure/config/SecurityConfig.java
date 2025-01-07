@@ -1,5 +1,7 @@
-package com.mysite.sbb.secure;
+package com.mysite.sbb.secure.config;
 
+import com.mysite.sbb.secure.Oauth2.service.Oauth2UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,9 +18,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final Oauth2UserService oauth2UserService;
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("여기");
         http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(new AntPathRequestMatcher("/**"))
@@ -26,7 +33,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
                 .headers(header -> header.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
                 .formLogin(formLogin -> formLogin.loginPage("/user/login").defaultSuccessUrl("/"))
-                .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true));
+                .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true))
+                .oauth2Login(oauth2Config -> oauth2Config
+                        .defaultSuccessUrl("/")
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oauth2UserService)));
         return http.build();
     }
 

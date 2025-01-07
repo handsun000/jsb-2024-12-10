@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,7 +48,7 @@ public class CommentController {
             model.addAttribute("paging", paging);
             return "question/question_detail";
         }
-        SiteUser siteUser = userService.findByUsername(principal.getName());
+        SiteUser siteUser = userService.findByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         commentService.write(question, siteUser, commentForm.getContent());
 
         return "redirect:/question/detail/%s".formatted(id);

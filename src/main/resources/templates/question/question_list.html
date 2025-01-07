@@ -19,6 +19,7 @@
             <th style="width:30%">제목</th>
             <th>글쓴이</th>
             <th>카테고리</th>
+            <th>조회수</th>
             <th>
                 <form action="/question/list" method="get" id="filterForm">
                     <label for="filter">
@@ -42,6 +43,7 @@
             </td>
             <td><span th:if="${question.author != null}" th:text="${question.author.username}"></span></td>
             <td><span th:if="${question.category != null}" th:text="${question.category.name}"></span></td>
+            <td><span th:text="${question.visited}"></span></td>
             <td th:text="${#temporals.format(question.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
@@ -87,10 +89,5 @@
         document.getElementById('page').value = 0;
         document.getElementById('searchForm').submit();
     });
-
-    function filter() {
-        console.log("여기");
-        document.filterForm.submit();
-    }
 </script>
 </html>

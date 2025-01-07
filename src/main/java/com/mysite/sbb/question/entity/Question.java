@@ -56,4 +56,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
+
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int visited;
 }

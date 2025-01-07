@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.metamodel.mapping.SqlExpressible;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -69,7 +70,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public String profile(Model model, Principal principal) {
-        SiteUser siteUser = userService.findByUsername(principal.getName());
+        SiteUser siteUser = userService.findByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         model.addAttribute("siteUser", siteUser);
 
@@ -88,7 +89,7 @@ public class UserController {
             return "form/findPassword_form";
         }
 
-        SiteUser siteUser = userService.findByUsername(userFindForm.getUsername());
+        SiteUser siteUser = userService.findByUsername(userFindForm.getUsername()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));;
         if (!siteUser.getEmail().equals(userFindForm.getEmail())) {
             bindingResult.rejectValue("email", "emailFail", "이메일이 맞지 않습니다.");
             return "form/findPassword_form";
@@ -118,7 +119,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "form/changePassword_form";
         }
-        SiteUser siteUser = userService.findByUsername(userChangePasswordForm.getUsername());
+        SiteUser siteUser = userService.findByUsername(userChangePasswordForm.getUsername()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));;
         if (!userChangePasswordForm.getPassword1().equals(siteUser.getPassword())) {
             bindingResult.rejectValue("password1", "password1Fail", "현재 비밀번호가 일치하지 않습니다.");
             return "form/changePassword_form";

@@ -13,11 +13,13 @@ import com.mysite.sbb.question.repository.QuestionRepository;
 import com.mysite.sbb.question.service.QuestionService;
 import com.mysite.sbb.user.entity.SiteUser;
 import com.mysite.sbb.user.service.UserService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,14 +51,16 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
+    @Transactional
     public String detail(@PathVariable long id, @RequestParam(value = "page", defaultValue = "0") int page, Model model, AnswerForm answerForm, CommentForm commentForm) {
-        Question question = questionService.findById(id);
         Page<Answer> paging = answerService.findByQuestionId(id, page);
+        Question question = questionService.findById(id);
+        question.setVisited(question.getVisited()+1);
 
         List<Comment> questionComment = new ArrayList<>();
         List<Comment> answerComment = new ArrayList<>();
-
         List<Comment> comments = question.getComments();
+
         if (comments != null && !comments.isEmpty()) {
             for (Comment comment : comments) {
                 if (comment.getQuestion() != null) {
@@ -71,6 +75,7 @@ public class QuestionController {
         model.addAttribute("paging", paging);
         model.addAttribute("questionComment", questionComment);
         model.addAttribute("answerComment", answerComment);
+        System.out.println("detail===");
         return "question/question_detail";
     }
 
@@ -89,7 +94,7 @@ public class QuestionController {
         if (bindingResult.hasErrors()) {
             return "form/question_form";
         }
-        SiteUser siteUser = userService.findByUsername(principal.getName());
+        SiteUser siteUser = userService.findByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         questionService.write(questionForm.getSubject(), questionForm.getContent(), questionForm.getCategory(), siteUser);
 
         return "redirect:/";
@@ -139,7 +144,7 @@ public class QuestionController {
     public String vote(@PathVariable long id, Principal principal) {
         Question question = questionService.findById(id);
 
-        SiteUser siteUser = userService.findByUsername(principal.getName());
+        SiteUser siteUser = userService.findByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         questionService.vote(question, siteUser);
 
         return "redirect:/question/detail/%s".formatted(id);
