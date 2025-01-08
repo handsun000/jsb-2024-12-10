@@ -49,19 +49,18 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             nameKey = "nickname";
         }
 
-        System.out.println("attributes = " +  attributes);
-        String name = (String) attributes.get("name");
-        String email = (String) attributes.get("email");
-
+        String name = String.valueOf(attributes.get("name"));
+        System.out.println("attributes2 = " + attributes);
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("admin".equals(name)) authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
         else authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
 
         DefaultOAuth2User user = new DefaultOAuth2User(authorities, attributes, nameKey);
+        CustomOAuth2User customUser = new CustomOAuth2User(user);
 
         // SecurityContext에 사용자 정보 저장
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                new CustomOAuth2User(user), // Principal
+                customUser, // Principal
                 null, // Credentials
                 authorities // GrantedAuthorities
         );
@@ -79,13 +78,16 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             userRepository.save(siteUser);
         }
 
-        return new CustomOAuth2User(user);
+        return customUser;
     }
 
     private Map<String, Object> extractKakaoAttributes(Map<String, Object> attributes) {
+        System.out.println("attributes = " + attributes);
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
-        profile.put("email", kakaoAccount.get("email"));
+        profile.put("email", kakaoAccount.getOrDefault("email","ohwoni1@daum.net"));
+        profile.put("name", String.valueOf(attributes.get("id")));
+
         return profile;
     }
 
