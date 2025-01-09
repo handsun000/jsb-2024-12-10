@@ -2,6 +2,8 @@ package com.mysite.sbb;
 
 import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.answer.repository.AnswerRepository;
+import com.mysite.sbb.category.entity.Category;
+import com.mysite.sbb.category.repository.CategoryRepository;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
 import com.mysite.sbb.user.entity.SiteUser;
@@ -32,6 +34,9 @@ class SbbApplicationTests {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Test
 	void t1() {
@@ -158,7 +163,16 @@ class SbbApplicationTests {
 	}
 	@Test
 	void t12() {
-		Optional<SiteUser> siteUser = userRepository.findByUsername("123");
+		Category category1 = Category.builder()
+				.name("질문답변").build();
+		categoryRepository.save(category1);
 
+		Category category2 = Category.builder()
+				.name("게시판").build();
+		categoryRepository.save(category2);
+
+		Category category3 = Category.builder()
+				.name("공지").build();
+		categoryRepository.save(category3);
 	}
 }

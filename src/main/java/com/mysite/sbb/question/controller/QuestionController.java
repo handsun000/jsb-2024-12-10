@@ -63,7 +63,7 @@ public class QuestionController {
 
         if (comments != null && !comments.isEmpty()) {
             for (Comment comment : comments) {
-                if (comment.getQuestion() != null) {
+                if (comment.getQuestion() != null && comment.getAnswer() == null) {
                     questionComment.add(comment);
                 } else {
                     answerComment.add(comment);
@@ -75,7 +75,6 @@ public class QuestionController {
         model.addAttribute("paging", paging);
         model.addAttribute("questionComment", questionComment);
         model.addAttribute("answerComment", answerComment);
-        System.out.println("detail===");
         return "question/question_detail";
     }
 

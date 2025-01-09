@@ -1,6 +1,7 @@
 package com.mysite.sbb.answer.entity;
 
 import com.mysite.sbb.comment.entity.Comment;
+import com.mysite.sbb.comment.entity.Commentable;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.user.entity.SiteUser;
 import jakarta.persistence.*;
@@ -21,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Answer {
+public class Answer implements Commentable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

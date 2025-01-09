@@ -3,6 +3,7 @@ package com.mysite.sbb.question.entity;
 import com.mysite.sbb.answer.entity.Answer;
 import com.mysite.sbb.category.entity.Category;
 import com.mysite.sbb.comment.entity.Comment;
+import com.mysite.sbb.comment.entity.Commentable;
 import com.mysite.sbb.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +23,7 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Question {
+public class Question implements Commentable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PRIVATE)

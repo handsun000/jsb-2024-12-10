@@ -2,7 +2,6 @@
       layout:decorate="~{/layout/layout}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <div layout:fragment="content" class="container my-3">
     <!-- 질문 -->
-    <p>Principal Class: <span th:text="${#authentication.getPrincipal().getClass().getName()}"></span></p>
     <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
     <div class="card my-3">
         <div class="card-body">
@@ -37,8 +36,9 @@
             <form th:action="@{|/comment/create/${question.id}|}" method="post" th:object="${commentForm}">
                 <div th:replace="~{/form/form_errors :: formErrorsFragment}"></div>
                 <div style="display:flex; justify-content:space-between;gap:10px">
-                        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
-                                  class="form-control"></textarea>
+                    <input type="hidden" id="kind" name="kind" value="question"/>
+                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
+                              class="form-control"></textarea>
                     <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="1"
                               class="form-control"></textarea>
                     <input type="submit" value="댓글등록" class="btn btn-primary my-2">
@@ -82,13 +82,17 @@
                    th:text="삭제"></a>
             </div>
             <div th:each="comment : ${answerComment}">
-                <div th:replace="~{/comment/comment_list :: commentList}"></div>
+                <div th:if="${answer.id == comment.answer.id}">
+                    <div th:replace="~{/comment/comment_list :: commentList}"></div>
+                </div>
             </div>
             <form th:action="@{|/comment/create/${question.id}|}" method="post" th:object="${commentForm}">
                 <div th:replace="~{/form/form_errors :: formErrorsFragment}"></div>
                 <div style="display:flex; justify-content:space-between;gap:10px">
-                        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
-                                  class="form-control"></textarea>
+                    <input type="hidden" id="kind" name="kind" value="answer"/>
+                    <input type="hidden" id="answerId" name="answerId" th:value="${answer.id}"/>
+                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="1"
+                              class="form-control"></textarea>
                     <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="1"
                               class="form-control"></textarea>
                     <input type="submit" value="댓글등록" class="btn btn-primary my-2">
